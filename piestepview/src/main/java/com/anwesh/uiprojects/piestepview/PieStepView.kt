@@ -171,4 +171,25 @@ class PieStepView (ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : PieStepView) {
+        private val pieStep : PieStep = PieStep(0)
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            pieStep.draw(canvas, paint)
+            animator.animate {
+                pieStep.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            pieStep.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
