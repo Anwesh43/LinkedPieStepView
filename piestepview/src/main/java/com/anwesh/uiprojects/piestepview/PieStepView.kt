@@ -103,4 +103,47 @@ class PieStepView (ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class PSNode(var i : Int, val state : State = State()) {
+
+        private var next : PSNode? = null
+        private var prev : PSNode? = null
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = PSNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun update(cb : (Int, Float) -> Unit){
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : PSNode {
+            var curr : PSNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+        
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawPSNode(i, state.scale, paint)
+        }
+    }
 }
