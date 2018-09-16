@@ -141,9 +141,34 @@ class PieStepView (ctx : Context) : View(ctx) {
             cb()
             return this
         }
-        
+
         fun draw(canvas : Canvas, paint : Paint) {
             canvas.drawPSNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+    }
+
+
+    data class PieStep(var i : Int) {
+        private var dir : Int = 1
+        private var root : PSNode = PSNode(0)
+        private var curr : PSNode = root
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            root.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            curr.update {i, scl ->
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                cb(i, scl)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
         }
     }
 }
