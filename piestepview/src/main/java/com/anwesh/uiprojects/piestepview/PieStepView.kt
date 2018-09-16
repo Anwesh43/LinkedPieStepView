@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.piestepview
  * Created by anweshmishra on 17/09/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.content.Context
@@ -191,6 +192,14 @@ class PieStepView (ctx : Context) : View(ctx) {
             pieStep.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : PieStepView {
+            val view : PieStepView = PieStepView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
