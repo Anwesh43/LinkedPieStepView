@@ -14,6 +14,31 @@ import android.graphics.Color
 
 val nodes : Int = 5
 
+fun Canvas.drawPSNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val r : Float = gap / 4
+    paint.color = Color.parseColor("#FFA726")
+    save()
+    translate(w/2, gap + i * gap)
+    for (j in 0..1) {
+        val sc : Float = Math.min(0.5f, Math.max(0f, scale - j * 0.5f)) * 2
+        val sc1 : Float = Math.min(0.5f, scale) * 2
+        val sc2 : Float = Math.min(0.5f, Math.max(0.5f, scale - 0.5f)) * 2
+        save()
+        translate(w/2 * sc2, 0f)
+        rotate(180f * sc2)
+        if (sc1 == 0f) {
+            drawLine(0f, 0f, r, 0f, paint)
+        } else {
+            drawArc(RectF(-r, -r, r, r), -90f * sc1, 180f * sc1, true, paint)
+        }
+        restore()
+    }
+    restore()
+}
+
 class PieStepView (ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
